@@ -1,10 +1,14 @@
-# Trabalho-Pr-tico-de-Programa-o-ASP05-
+# Trabalho-Prático-de-Programa-o-ASP05-
 
 Trabalho final da disciplina de Programação Orientado a Objetos, Universidade Federal do Pampa (UNIPAMPA)
 Alunos no grupo:
+
 [Heitor Mauro Chavez](https://github.com/elcabriton)
+
 [Nicolas Uriel Ramos](https://github.com/nicolasURamos)
+
 [Rafael Luz Melo](https://github.com/lrafaelz)
+
 [Vinícius Martins Faria](https://github.com/ViniciusMartinsFaria)
 
 O objetivo do trabalho é a representação de grafos, em uma abordagem didática. Deve-se construir uma aplicação para representar um grafo de diferentes maneiras diferentes com os algoritmos mais populares, de forma didática com representação gráfica das ações realizadas no grafo.

@@ -1,4 +1,4 @@
-# Trabalho-Prático-de-Programa-o-ASP05-
+# Trabalho-Pratico-de-Programa-o-ASP05
 
 Trabalho final da disciplina de Programação Orientado a Objetos, Universidade Federal do Pampa (UNIPAMPA)
 

@@ -1,0 +1,26 @@
+c FILE			: n10.gr
+c No. of vertices	: 10
+c No. of directed edges	: 18
+c Max. weight		: 100
+c Min. weight		: 0
+c A directed arc from u to v of weight w
+c is represented below as ' a  u  v  w '
+p sp 10 18
+a 2 7 8
+a 2 10 4
+a 2 9 27
+a 2 3 27
+a 3 4 87
+a 3 7 65
+a 3 5 2
+a 4 3 66
+a 4 10 98
+a 4 3 58
+a 4 5 57
+a 5 6 22
+a 5 6 49
+a 7 8 21
+a 8 3 55
+a 9 7 21
+a 10 9 78
+a 10 8 12

@@ -10,7 +10,7 @@ public class GUI extends JFrame implements ActionListener {
 
     Image image;
     Image newimg;
-    ImageIcon icon = new ImageIcon("D:\\Rafae\\SubDesktop\\Unipampa\\2021.2\\POO\\Codes\\Trabalho-Pratico-de-Programacao_ASP05\\src\\images\\JFrameIcon.png"); // copy the path of image and paste here
+    ImageIcon icon = new ImageIcon("YourPathFiles\\images\\JFrameIcon.png"); // copy the path of image and paste here
 
     final int frameWidth = 600;
     final int frameHeight = 360;
@@ -30,6 +30,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void mainMenu(){
+
         mainMenuTitle = new JLabel();
         mainMenuTitle.setBounds(0, 0, frameWidth, 50);
         mainMenuTitle.setText("Graph generator");
@@ -62,24 +63,6 @@ public class GUI extends JFrame implements ActionListener {
         initNewGraph.setBackground(new Color(59, 89, 182));
         initNewGraph.setBorder(BorderFactory.createEtchedBorder());
     }
-
-    public void fileGraphMenu(){
-
-    }
-
-    public void newGraphMenu(){
-
-    }
-
-    public void graphManagment(){
-
-    }
-
-    public void editNode(){
-
-    }
-
-    public void 
     
     @Override
     public void actionPerformed(ActionEvent e) {

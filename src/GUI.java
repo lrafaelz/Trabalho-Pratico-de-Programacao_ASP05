@@ -23,7 +23,7 @@ public class GUI extends JFrame implements ActionListener {
     JButton StartGraph; // shared with empty graph management frame
 
     // Start graph from empty graph/empty graph management frame
-    JLabel graphManagementTitle;
+    JLabel emptyGraphTitle;
     JPanel emptyGraphPanel;
     JLabel text1;
     JLabel text2;
@@ -36,6 +36,13 @@ public class GUI extends JFrame implements ActionListener {
     JCheckBox edgeYes;
     JCheckBox edgeNo;
 
+    // graph management frame
+    JLabel graphManagementTitle;
+    JButton editExistentNode;
+    JButton removeExistentNode;
+    JButton undoGraph;
+    JButton finishEdits;
+
     
 
 
@@ -46,7 +53,7 @@ public class GUI extends JFrame implements ActionListener {
     final int frameHeight = 360;
 
     GUI(){
-        newGraphMenu();
+        graphManagement();
     }
 
     public void mainMenu(){
@@ -161,13 +168,13 @@ public class GUI extends JFrame implements ActionListener {
     }
          
     public void newGraphMenu(){
-        graphManagementTitle = new JLabel();
-        graphManagementTitle.setBounds(0, 0, frameWidth, 50);
-        graphManagementTitle.setText("Gerar grafo a partir de arquivo");
-        graphManagementTitle.setHorizontalAlignment(JLabel.CENTER);
-        graphManagementTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
-        graphManagementTitle.setBackground(new Color(0xBBCCE2));
-        graphManagementTitle.setOpaque(true);
+        emptyGraphTitle = new JLabel();
+        emptyGraphTitle.setBounds(0, 0, frameWidth, 50);
+        emptyGraphTitle.setText("Gerar grafo a partir de arquivo");
+        emptyGraphTitle.setHorizontalAlignment(JLabel.CENTER);
+        emptyGraphTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        emptyGraphTitle.setBackground(new Color(0xBBCCE2));
+        emptyGraphTitle.setOpaque(true);
 
         emptyGraphPanel = new JPanel(new GridLayout(2,0,0,5));
         emptyGraphPanel.setBounds(0, 40, frameWidth/2, 200);
@@ -230,9 +237,6 @@ public class GUI extends JFrame implements ActionListener {
         edgeNo.setBackground(null);
         edgeNo.setFont(new Font("Tahoma", Font.BOLD, 12));
 
-        
-
-        
         // Button return to main manu
         returnToMainMenu = new JButton("Voltar ao menu");
         returnToMainMenu.setBounds(50, 250, 200, 40);
@@ -253,14 +257,14 @@ public class GUI extends JFrame implements ActionListener {
         StartGraph.setBackground(new Color(59, 89, 182));
         StartGraph.setBorder(BorderFactory.createEtchedBorder());
 
-        this.setTitle("Inserir arquivo");
+        this.setTitle("Configurações - novo grafo");
         this.setSize(frameWidth, frameHeight);
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.add(graphManagementTitle);
+        this.add(emptyGraphTitle);
         this.add(emptyGraphPanel);
         this.add(amountNodes);
         this.add(amountEdge);
@@ -270,13 +274,73 @@ public class GUI extends JFrame implements ActionListener {
         this.add(edgeNo);
         this.add(returnToMainMenu);
         this.add(StartGraph);
-
         this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void graphManagement(){
+        graphManagementTitle = new JLabel();
+        graphManagementTitle.setBounds(0, 0, frameWidth, 50);
+        graphManagementTitle.setText("Selecione a opção desejada");
+        graphManagementTitle.setHorizontalAlignment(JLabel.CENTER);
+        graphManagementTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        graphManagementTitle.setBackground(new Color(0xBBCCE2));
+        graphManagementTitle.setOpaque(true);
 
+        editExistentNode = new JButton("Editar nodo existente");
+        editExistentNode.setBounds(frameWidth/4 - 250/2, 80, 250, 40);
+        editExistentNode.addActionListener(this);
+        editExistentNode.setFocusable(false); // remove rectangle under text of button
+        editExistentNode.setFont(new Font("Tahoma", Font.BOLD, 20));
+        editExistentNode.setForeground(Color.WHITE);
+        editExistentNode.setBackground(new Color(59, 89, 182));
+        editExistentNode.setBorder(BorderFactory.createEtchedBorder());
+
+        removeExistentNode = new JButton("Remover nodo");
+        removeExistentNode.setBounds(3*frameWidth/4 - 180/2, 80, 180, 40);
+        removeExistentNode.addActionListener(this);
+        removeExistentNode.setFocusable(false); // remove rectangle under text of button
+        removeExistentNode.setFont(new Font("Tahoma", Font.BOLD, 20));
+        removeExistentNode.setForeground(Color.WHITE);
+        removeExistentNode.setBackground(new Color(59, 89, 182));
+        removeExistentNode.setBorder(BorderFactory.createEtchedBorder());
+        
+        
+        // Button undo current graph
+        undoGraph = new JButton("Desfazer grafo");
+        undoGraph.setBounds(50, 250, 170, 40);
+        undoGraph.addActionListener(this);
+        undoGraph.setFocusable(false); // remove rectangle under text of button
+        undoGraph.setFont(new Font("Tahoma", Font.BOLD, 20));
+        undoGraph.setForeground(Color.WHITE);
+        undoGraph.setBackground(new Color(59, 89, 182));
+        undoGraph.setBorder(BorderFactory.createEtchedBorder());
+        
+        // Button start graph
+        finishEdits = new JButton("Finalizar grafo");
+        finishEdits.setBounds(370, 250, 170, 40);
+        finishEdits.addActionListener(this);
+        finishEdits.setFocusable(false); // remove rectangle under text of button
+        finishEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        finishEdits.setForeground(Color.WHITE);
+        finishEdits.setBackground(new Color(59, 89, 182));
+        finishEdits.setBorder(BorderFactory.createEtchedBorder());
+        
+
+        this.setTitle("Gestão do grafo");
+        this.setSize(frameWidth, frameHeight);
+        this.setLayout(null);
+        this.setIconImage(icon.getImage());
+        this.getContentPane().setBackground(new Color(0xBBCCE2));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.add(graphManagementTitle);
+        this.add(editExistentNode);
+        this.add(removeExistentNode);
+        this.add(undoGraph);
+        this.add(finishEdits);
+        this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void editNode(){
@@ -366,7 +430,7 @@ public class GUI extends JFrame implements ActionListener {
             System.out.println("Return to main menu");
         }
 
-        
+
         if(e.getSource() == StartGraph){
             System.out.println("Start graph");
         }

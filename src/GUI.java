@@ -36,24 +36,46 @@ public class GUI extends JFrame implements ActionListener {
     JCheckBox edgeYes;
     JCheckBox edgeNo;
 
-    // graph management frame
+    // Graph management frame
     JLabel graphManagementTitle;
     JButton editExistentNode;
     JButton removeExistentNode;
-    JButton undoGraph;
-    JButton finishEdits;
+    JButton undoGraph; // shared with last frame
+    JButton finishEdits; // shared with last frame
 
+    // Edit node frame
+    JLabel editNodeTitle;
+    JPanel editNodePanel;
+    JLabel selectNode;
+    JLabel selectEdge;
+    JLabel weightEdges;
+    JComboBox<Integer> nodeComboBox; // shared with remove node frame
+    JTextField edgesTextField;
+    JTextField weightEdgesTextField;
+    JButton undoEdits; //shared with remove node frame
+    JButton saveEdits; //shared with remove node frame
+
+    // Remove node frame
+    JLabel removeNodeTitle;
+    JLabel removeText;
     
+    // Choose a algorithm frame
+    JLabel algorithmChooserTitle;
+    JButton DFSButton;
+    JButton BFSButton;
+    JButton TopologicalSortingButton;
+    JButton minimumSpanningTree;
+    JButton shortestPath;
 
-
-    
-
+    // Last frame
+    JLabel finishedGraph;
+    JButton animationButton;
 
     final int frameWidth = 600;
     final int frameHeight = 360;
 
     GUI(){
-        graphManagement();
+        finalPage();
     }
 
     public void mainMenu(){
@@ -345,18 +367,278 @@ public class GUI extends JFrame implements ActionListener {
 
     public void editNode(){
 
+        editNodeTitle = new JLabel();
+        editNodeTitle.setBounds(0, 0, frameWidth, 50);
+        editNodeTitle.setText("Editar nodo");
+        editNodeTitle.setHorizontalAlignment(JLabel.CENTER);
+        editNodeTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        editNodeTitle.setBackground(new Color(0xBBCCE2));
+        editNodeTitle.setOpaque(true);
+
+        editNodePanel = new JPanel(new GridLayout(2,0,0,5));
+        editNodePanel.setBounds(0, 40, frameWidth/2, 200);
+        editNodePanel.setBackground(new Color(0xBBCCE2));
+
+        selectNode = new JLabel();
+        selectNode.setText("<html>Escolha o elemento a ser editado<br><br>&emsp;&emsp;&ensp;Partindo conexão para:</html>");
+        selectNode.setHorizontalAlignment(JLabel.CENTER);
+        selectNode.setVerticalAlignment(JLabel.CENTER);
+        selectNode.setSize(frameWidth/2, 15);
+        selectNode.setFont(new Font("Tahoma", Font.BOLD, 15));
+        selectNode.setBackground(new Color(0xBBCCE2));
+        selectNode.setOpaque(true);
+
+        weightEdges = new JLabel();
+        weightEdges.setText("<html>Defina o peso respectivo de<br>&emsp;&emsp;&emsp;cada conexão:</html>");
+        weightEdges.setHorizontalAlignment(JLabel.CENTER);
+        weightEdges.setVerticalAlignment(JLabel.CENTER);
+        weightEdges.setSize(frameWidth/2, 5);
+        weightEdges.setFont(new Font("Tahoma", Font.BOLD, 15));
+        weightEdges.setBackground(new Color(0xBBCCE2));
+        weightEdges.setOpaque(true);
+
+        editNodePanel.add(selectNode);
+        editNodePanel.add(weightEdges);
+
+        // 
+        nodeComboBox = new JComboBox<Integer>();
+        // nodeComboBox.setSelectedIndex(0);
+        nodeComboBox.setBounds(frameWidth/2 + frameWidth/8 - 50, 55, 100, 30);
+        // nodeComboBox.setSelectedIndex(0);
+
+        edgesTextField = new JTextField();
+        edgesTextField.setBounds(frameWidth/2 + frameWidth/8 - 50, 95, 200, 30);
+        edgesTextField.setFont(new Font("Comic Sans", Font.BOLD, 25));
+
+        weightEdgesTextField = new JTextField();
+        weightEdgesTextField.setBounds(frameWidth/2 + frameWidth/8 - 50, 175, 200, 30);
+        weightEdgesTextField.setFont(new Font("Comic Sans", Font.BOLD, 25));
+
+        // Button return to graph management
+        undoEdits = new JButton("Desfazer edições");
+        undoEdits.setBounds(50, 250, 200, 40);
+        undoEdits.addActionListener(this);
+        undoEdits.setFocusable(false); // remove rectangle under text of button
+        undoEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        undoEdits.setForeground(Color.WHITE);
+        undoEdits.setBackground(new Color(59, 89, 182));
+        undoEdits.setBorder(BorderFactory.createEtchedBorder());
+        
+        // Button save graph edits
+        saveEdits = new JButton("Salvar edições");
+        saveEdits.setBounds(370, 250, 170, 40);
+        saveEdits.addActionListener(this);
+        saveEdits.setFocusable(false); // remove rectangle under text of button
+        saveEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        saveEdits.setForeground(Color.WHITE);
+        saveEdits.setBackground(new Color(59, 89, 182));
+        saveEdits.setBorder(BorderFactory.createEtchedBorder());
+       
+
+        this.setTitle("Gestão do grafo");
+        this.setSize(frameWidth, frameHeight);
+        this.setLayout(null);
+        this.setIconImage(icon.getImage());
+        this.getContentPane().setBackground(new Color(0xBBCCE2));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.add(editNodeTitle);
+        this.add(editNodePanel);
+        this.add(undoEdits);
+        this.add(saveEdits);
+        this.add(nodeComboBox);
+        this.add(edgesTextField);
+        this.add(weightEdgesTextField);
+        this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void removeNode(){
+        removeNodeTitle = new JLabel();
+        removeNodeTitle.setBounds(0, 0, frameWidth, 50);
+        removeNodeTitle.setText("Remover nodo");
+        removeNodeTitle.setHorizontalAlignment(JLabel.CENTER);
+        removeNodeTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        removeNodeTitle.setBackground(new Color(0xBBCCE2));
+        removeNodeTitle.setOpaque(true);
 
+        removeText = new JLabel();
+        removeText.setText("Escolha o elemento a ser removido");
+        removeText.setBounds(0, 85, frameWidth/2, 200);
+        removeText.setHorizontalAlignment(JLabel.CENTER);
+        removeText.setVerticalAlignment(JLabel.CENTER);
+        removeText.setSize(frameWidth/2, 15);
+        removeText.setFont(new Font("Tahoma", Font.BOLD, 15));
+        removeText.setBackground(new Color(0xBBCCE2));
+        removeText.setOpaque(true);
+
+        // 
+        nodeComboBox = new JComboBox<Integer>();
+        // nodeComboBox.setSelectedIndex(0);
+        nodeComboBox.setBounds(frameWidth/2 + frameWidth/8 - 50, 80, 100, 30);
+        // nodeComboBox.setSelectedIndex(0);
+        
+        // Button return to graph management
+        undoEdits = new JButton("Desfazer edições");
+        undoEdits.setBounds(50, 250, 200, 40);
+        undoEdits.addActionListener(this);
+        undoEdits.setFocusable(false); // remove rectangle under text of button
+        undoEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        undoEdits.setForeground(Color.WHITE);
+        undoEdits.setBackground(new Color(59, 89, 182));
+        undoEdits.setBorder(BorderFactory.createEtchedBorder());
+        
+        // Button save graph edits
+        saveEdits = new JButton("Salvar edições");
+        saveEdits.setBounds(370, 250, 170, 40);
+        saveEdits.addActionListener(this);
+        saveEdits.setFocusable(false); // remove rectangle under text of button
+        saveEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        saveEdits.setForeground(Color.WHITE);
+        saveEdits.setBackground(new Color(59, 89, 182));
+        saveEdits.setBorder(BorderFactory.createEtchedBorder());
+       
+
+        this.setTitle("Remover nodo");
+        this.setSize(frameWidth, frameHeight);
+        this.setLayout(null);
+        this.setIconImage(icon.getImage());
+        this.getContentPane().setBackground(new Color(0xBBCCE2));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.add(removeNodeTitle);
+        this.add(removeText);
+        this.add(nodeComboBox);
+        this.add(undoEdits);
+        this.add(saveEdits);
+        this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void chooseAlgorithm(){
+        algorithmChooserTitle = new JLabel();
+        algorithmChooserTitle.setBounds(0, 0, frameWidth, 50);
+        algorithmChooserTitle.setText("Escolha o algoritmo para percorrer o grafo");
+        algorithmChooserTitle.setHorizontalAlignment(JLabel.CENTER);
+        algorithmChooserTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        algorithmChooserTitle.setBackground(new Color(0xBBCCE2));
+        algorithmChooserTitle.setOpaque(true);
 
+        DFSButton = new JButton("Depth-First-Search");
+        DFSButton.setBounds(frameWidth/4 - 250/2, 70, 250, 40);
+        DFSButton.addActionListener(this);
+        DFSButton.setFocusable(false); // remove rectangle under text of button
+        DFSButton.setFont(new Font("Tahoma", Font.BOLD, 20));
+        DFSButton.setForeground(Color.WHITE);
+        DFSButton.setBackground(new Color(59, 89, 182));
+        DFSButton.setBorder(BorderFactory.createEtchedBorder());
+
+        BFSButton = new JButton("Breadth-First-Search");
+        BFSButton.setBounds(3*frameWidth/4 - 240/2, 70, 240, 40);
+        BFSButton.addActionListener(this);
+        BFSButton.setFocusable(false); // remove rectangle under text of button
+        BFSButton.setFont(new Font("Tahoma", Font.BOLD, 20));
+        BFSButton.setForeground(Color.WHITE);
+        BFSButton.setBackground(new Color(59, 89, 182));
+        BFSButton.setBorder(BorderFactory.createEtchedBorder());
+
+        TopologicalSortingButton = new JButton("Topological Sorting");
+        TopologicalSortingButton.setBounds(frameWidth/4 - 250/2, 130, 250, 40);
+        TopologicalSortingButton.addActionListener(this);
+        TopologicalSortingButton.setFocusable(false); // remove rectangle under text of button
+        TopologicalSortingButton.setFont(new Font("Tahoma", Font.BOLD, 20));
+        TopologicalSortingButton.setForeground(Color.WHITE);
+        TopologicalSortingButton.setBackground(new Color(59, 89, 182));
+        TopologicalSortingButton.setBorder(BorderFactory.createEtchedBorder());
+
+        minimumSpanningTree = new JButton("Minimum Spanning Tree");
+        minimumSpanningTree.setBounds(3*frameWidth/4 - 260/2, 130, 260, 40);
+        minimumSpanningTree.addActionListener(this);
+        minimumSpanningTree.setFocusable(false); // remove rectangle under text of button
+        minimumSpanningTree.setFont(new Font("Tahoma", Font.BOLD, 20));
+        minimumSpanningTree.setForeground(Color.WHITE);
+        minimumSpanningTree.setBackground(new Color(59, 89, 182));
+        minimumSpanningTree.setBorder(BorderFactory.createEtchedBorder());
+
+        shortestPath = new JButton("Shortest path");
+        shortestPath.setBounds(frameWidth/2 - 180/2, 190, 180, 40);
+        shortestPath.addActionListener(this);
+        shortestPath.setFocusable(false); // remove rectangle under text of button
+        shortestPath.setFont(new Font("Tahoma", Font.BOLD, 20));
+        shortestPath.setForeground(Color.WHITE);
+        shortestPath.setBackground(new Color(59, 89, 182));
+        shortestPath.setBorder(BorderFactory.createEtchedBorder());
+
+        this.setTitle("Select algorithm");
+        this.setSize(frameWidth, frameHeight);
+        this.setLayout(null);
+        this.setIconImage(icon.getImage());
+        this.getContentPane().setBackground(new Color(0xBBCCE2));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.add(algorithmChooserTitle);
+        this.add(DFSButton);
+        this.add(BFSButton);
+        this.add(TopologicalSortingButton);
+        this.add(minimumSpanningTree);
+        this.add(shortestPath);
+        this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void finalPage(){
+        algorithmChooserTitle = new JLabel();
+        algorithmChooserTitle.setBounds(0, 0, frameWidth, 50);
+        algorithmChooserTitle.setText("Algorithm chosen");
+        algorithmChooserTitle.setHorizontalAlignment(JLabel.CENTER);
+        algorithmChooserTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        algorithmChooserTitle.setBackground(new Color(0xBBCCE2));
+        algorithmChooserTitle.setOpaque(true);
 
+        
+
+        animationButton = new JButton("Animação");
+        animationButton.setBounds(frameWidth/2 - 180/2, 70, 180, 40);
+        animationButton.addActionListener(this);
+        animationButton.setFocusable(false); // remove rectangle under text of button
+        animationButton.setFont(new Font("Tahoma", Font.BOLD, 20));
+        animationButton.setForeground(Color.WHITE);
+        animationButton.setBackground(new Color(59, 89, 182));
+        animationButton.setBorder(BorderFactory.createEtchedBorder());
+
+        // Button undo current graph
+        undoGraph = new JButton("Desfazer grafo");
+        undoGraph.setBounds(50, 250, 170, 40);
+        undoGraph.addActionListener(this);
+        undoGraph.setFocusable(false); // remove rectangle under text of button
+        undoGraph.setFont(new Font("Tahoma", Font.BOLD, 20));
+        undoGraph.setForeground(Color.WHITE);
+        undoGraph.setBackground(new Color(59, 89, 182));
+        undoGraph.setBorder(BorderFactory.createEtchedBorder());
+
+        // Button start graph
+        finishEdits = new JButton("Finalizar grafo");
+        finishEdits.setBounds(370, 250, 170, 40);
+        finishEdits.addActionListener(this);
+        finishEdits.setFocusable(false); // remove rectangle under text of button
+        finishEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        finishEdits.setForeground(Color.WHITE);
+        finishEdits.setBackground(new Color(59, 89, 182));
+        finishEdits.setBorder(BorderFactory.createEtchedBorder());
+
+        this.setTitle("Select algorithm");
+        this.setSize(frameWidth, frameHeight);
+        this.setLayout(null);
+        this.setIconImage(icon.getImage());
+        this.getContentPane().setBackground(new Color(0xBBCCE2));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.add(algorithmChooserTitle);
+        this.add(animationButton);
+        this.add(undoGraph);
+        this.add(finishEdits);
+        this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     

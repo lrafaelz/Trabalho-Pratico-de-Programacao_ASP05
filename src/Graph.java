@@ -2,8 +2,14 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 public interface Graph <E,T>{
-  int getNumberOfEdges(); // retorna o número de arestas do grafo
-  int getNumberOfVertices();  // retorna o número de vértices do grafo
+
+  
+
+
+
+  //metodos
+  // int getNumberOfEdges(); // retorna o número de arestas do grafo
+  // int getNumberOfVertices();  // retorna o número de vértices do grafo
   boolean isDirected(); // retorna se o grafo é direcionado
   void addVertex(int v);  // insere um vértice no grafo. Se um grafo tem n vértices, eles estão numerados [0..(n-1)] {não informa peso ou dado}
   void addVertex(int v, Weight w); // insere vértice com peso 'w' {não informa dados para o vértice}
@@ -18,7 +24,21 @@ public interface Graph <E,T>{
   boolean isCyclic(); // returna true se o grafo é um ciclo.
   Enumeration getVertices();  // retorna uma enumeração dos vértices do grafo
   Enumeration getEdges(); // retorna uma enumeração das arestas do grafo
-  void depthFirstTraversal(PrePostVisitor visitor, int start);  // busca em profundidade no grafo (DFS), a partir do vértice 'start'
+  void depthFirstTraversal(PrePostVisitor visitor, int start, int solicitado){
+   int i;
+   for(this.grafo)
+   
+   
+   
+   
+    // if(visitor.preVisit(obj)==solicitado){
+      
+    //   while(visitor.preVisit(obj)!=solicitado){
+    //     visitor.preVisit(obj)=start
+
+    //   }
+    //}
+  }  // busca em profundidade no grafo (DFS), a partir do vértice 'start'
   void breadthFirstTraversal(Visitor visitor, int start); // busca em largura no grafo (BFS), a partir do vértice 'start'
   void breadthFirstTraversal(Visitor visitor); // busca em largura no grafo (BFS), sem definir um vértice de início
 

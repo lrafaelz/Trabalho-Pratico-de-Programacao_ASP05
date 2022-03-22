@@ -1,14 +1,15 @@
-import java.awt.event.*;
 import java.io.File;
-import java.awt.*;
-import java.awt.Color;
 import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.Color;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GUI extends JFrame implements ActionListener {
 
 
-    ImageIcon icon = new ImageIcon("path\\images\\JFrameIcon.png"); // copy the path of image and paste here
+    ImageIcon icon = new ImageIcon("src\\images\\JFrameIcon.png"); // copy the path of image and paste here
     // Main menu frame
     JLabel mainMenuTitle;
     JButton addFileGraph;
@@ -23,13 +24,29 @@ public class GUI extends JFrame implements ActionListener {
 
     // Start graph from empty graph/empty graph management frame
     JLabel graphManagementTitle;
+    JPanel emptyGraphPanel;
+    JLabel text1;
+    JLabel text2;
+    JSpinner amountNodes;
+    SpinnerModel minMax1 = new SpinnerNumberModel(0, 0, 100, 1);
+    JSpinner amountEdge;
+    SpinnerModel minMax2 = new SpinnerNumberModel(0, 0, 200, 1);
+    JCheckBox weighedYes;
+    JCheckBox weighedNo;
+    JCheckBox edgeYes;
+    JCheckBox edgeNo;
+
+    
+
+
+    
 
 
     final int frameWidth = 600;
     final int frameHeight = 360;
 
     GUI(){
-        fileGraphMenu();
+        newGraphMenu();
     }
 
     public void mainMenu(){
@@ -144,7 +161,118 @@ public class GUI extends JFrame implements ActionListener {
     }
          
     public void newGraphMenu(){
+        graphManagementTitle = new JLabel();
+        graphManagementTitle.setBounds(0, 0, frameWidth, 50);
+        graphManagementTitle.setText("Gerar grafo a partir de arquivo");
+        graphManagementTitle.setHorizontalAlignment(JLabel.CENTER);
+        graphManagementTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
+        graphManagementTitle.setBackground(new Color(0xBBCCE2));
+        graphManagementTitle.setOpaque(true);
 
+        emptyGraphPanel = new JPanel(new GridLayout(2,0,0,5));
+        emptyGraphPanel.setBounds(0, 40, frameWidth/2, 200);
+        emptyGraphPanel.setBackground(new Color(0xBBCCE2));
+        
+        text1 = new JLabel();
+        text1.setText("<html>Insira o número de elementos:<br><br>Insira o número de arestas:</html>");
+        text1.setHorizontalAlignment(JLabel.CENTER);
+        text1.setVerticalAlignment(JLabel.CENTER);
+        text1.setSize(frameWidth/2, 15);
+        text1.setFont(new Font("Tahoma", Font.BOLD, 15));
+        text1.setBackground(new Color(0xBBCCE2));
+        text1.setOpaque(true);
+
+        text2 = new JLabel();
+        text2.setText("<html>O grafo será dirigido?<br><br>O grafo será ponderado?</html>");
+        text2.setHorizontalAlignment(JLabel.CENTER);
+        text2.setVerticalAlignment(JLabel.CENTER);
+        text2.setSize(frameWidth/2, 5);
+        text2.setFont(new Font("Tahoma", Font.BOLD, 15));
+        text2.setBackground(new Color(0xBBCCE2));
+        text2.setOpaque(true);
+
+        emptyGraphPanel.add(text1);
+        emptyGraphPanel.add(text2);
+
+        amountNodes = new JSpinner();
+        amountNodes.setBounds(frameWidth/2 + frameWidth/8 - 50, 50, 50, 30);
+        amountNodes.setModel(minMax1);
+        amountNodes.setValue(1);
+
+        amountEdge = new JSpinner();
+        amountEdge.setBounds(frameWidth/2 + frameWidth/8 - 50, 95, 50, 30);
+        amountEdge.setModel(minMax2);
+        amountEdge.setValue(1);
+
+        // weighed check box
+        weighedYes = new JCheckBox("Sim");
+        weighedYes.setBounds(frameWidth/2 + frameWidth/8 - 50, 155, 50, 30);
+        weighedYes.addActionListener(this);
+        weighedYes.setBackground(null);
+        weighedYes.setFont(new Font("Tahoma", Font.BOLD, 12));
+
+        weighedNo = new JCheckBox("Não", true);
+        weighedNo.setBounds(frameWidth/2 + frameWidth/8, 155, 50, 30);
+        weighedNo.addActionListener(this);
+        weighedNo.setBackground(null);
+        weighedNo.setFont(new Font("Tahoma", Font.BOLD, 12));
+
+        // Edge CheckBox
+        edgeYes = new JCheckBox("Sim");
+        edgeYes.setBounds(frameWidth/2 + frameWidth/8 - 50, 195, 50, 30);
+        edgeYes.addActionListener(this);
+        edgeYes.setBackground(null);
+        edgeYes.setFont(new Font("Tahoma", Font.BOLD, 12));
+
+        edgeNo = new JCheckBox("Não", true);
+        edgeNo.setBounds(frameWidth/2 + frameWidth/8, 195, 50, 30);
+        edgeNo.addActionListener(this);
+        edgeNo.setBackground(null);
+        edgeNo.setFont(new Font("Tahoma", Font.BOLD, 12));
+
+        
+
+        
+        // Button return to main manu
+        returnToMainMenu = new JButton("Voltar ao menu");
+        returnToMainMenu.setBounds(50, 250, 200, 40);
+        returnToMainMenu.addActionListener(this);
+        returnToMainMenu.setFocusable(false); // remove rectangle under text of button
+        returnToMainMenu.setFont(new Font("Tahoma", Font.BOLD, 20));
+        returnToMainMenu.setForeground(Color.WHITE);
+        returnToMainMenu.setBackground(new Color(59, 89, 182));
+        returnToMainMenu.setBorder(BorderFactory.createEtchedBorder());
+        
+        // Button start graph
+        StartGraph = new JButton("Iniciar grafo");
+        StartGraph.setBounds(390, 250, 150, 40);
+        StartGraph.addActionListener(this);
+        StartGraph.setFocusable(false); // remove rectangle under text of button
+        StartGraph.setFont(new Font("Tahoma", Font.BOLD, 20));
+        StartGraph.setForeground(Color.WHITE);
+        StartGraph.setBackground(new Color(59, 89, 182));
+        StartGraph.setBorder(BorderFactory.createEtchedBorder());
+
+        this.setTitle("Inserir arquivo");
+        this.setSize(frameWidth, frameHeight);
+        this.setLayout(null);
+        this.setIconImage(icon.getImage());
+        this.getContentPane().setBackground(new Color(0xBBCCE2));
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.add(graphManagementTitle);
+        this.add(emptyGraphPanel);
+        this.add(amountNodes);
+        this.add(amountEdge);
+        this.add(weighedYes);
+        this.add(weighedNo);
+        this.add(edgeYes);
+        this.add(edgeNo);
+        this.add(returnToMainMenu);
+        this.add(StartGraph);
+
+        this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     public void graphManagement(){
@@ -175,6 +303,7 @@ public class GUI extends JFrame implements ActionListener {
             System.out.println("addFileGraph");
         }
 
+
         if(e.getSource() == initNewGraph){
             System.out.println("initNewGraph");
         }
@@ -200,10 +329,44 @@ public class GUI extends JFrame implements ActionListener {
             }
         }
 
+
+        if (e.getSource() == weighedYes || e.getSource() == weighedNo) {
+			JCheckBox clicked = (JCheckBox) e.getSource();
+			if (clicked == weighedYes) {
+				if (clicked.isSelected())
+					weighedNo.setSelected(false);
+				else
+                    weighedNo.setSelected(true);
+			} else {
+				if (clicked.isSelected())
+					weighedYes.setSelected(false);
+				else
+					weighedYes.setSelected(true);
+			}
+		}
+        
+
+        if (e.getSource() == edgeYes || e.getSource() == edgeNo) {
+            JCheckBox clicked = (JCheckBox) e.getSource();
+            if (clicked == edgeYes) {
+                if (clicked.isSelected())
+                    edgeNo.setSelected(false);
+                else
+                    edgeNo.setSelected(true);
+            } else {
+                if (clicked.isSelected())
+                    edgeYes.setSelected(false);
+                else
+                    edgeYes.setSelected(true);
+            }
+        }
+
+
         if(e.getSource() == returnToMainMenu){
             System.out.println("Return to main menu");
         }
 
+        
         if(e.getSource() == StartGraph){
             System.out.println("Start graph");
         }

@@ -1,4 +1,5 @@
 import java.io.File;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
@@ -8,7 +9,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GUI extends JFrame implements ActionListener {
 
-
+    // Frame icon
     ImageIcon icon = new ImageIcon("src\\images\\JFrameIcon.png"); // copy the path of image and paste here
     // Main menu frame
     JLabel mainMenuTitle;
@@ -40,8 +41,8 @@ public class GUI extends JFrame implements ActionListener {
     JLabel graphManagementTitle;
     JButton editExistentNode;
     JButton removeExistentNode;
-    JButton undoGraph; // shared with last frame
-    JButton finishEdits; // shared with last frame
+    JButton undoGraph;
+    JButton finishEdits;
 
     // Edit node frame
     JLabel editNodeTitle;
@@ -52,12 +53,14 @@ public class GUI extends JFrame implements ActionListener {
     JComboBox<Integer> nodeComboBox; // shared with remove node frame
     JTextField edgesTextField;
     JTextField weightEdgesTextField;
-    JButton undoEdits; //shared with remove node frame
-    JButton saveEdits; //shared with remove node frame
+    JButton undoNodeEdits;
+    JButton saveNodeEdits;
 
     // Remove node frame
     JLabel removeNodeTitle;
     JLabel removeText;
+    JButton undoRemoveEdits;
+    JButton saveRemoveEdits;
     
     // Choose a algorithm frame
     JLabel algorithmChooserTitle;
@@ -70,12 +73,21 @@ public class GUI extends JFrame implements ActionListener {
     // Last frame
     JLabel finishedGraph;
     JButton animationButton;
+    JButton finalUndoGraph;
+    JButton finalSaveGraph;
 
+    // Frame size
     final int frameWidth = 600;
     final int frameHeight = 360;
 
+    // Graph attributes
+    boolean isFile;
+    File selectedFile = null;
+    boolean isWeighted;
+    boolean isDirected;
+
     GUI(){
-        finalPage();
+        mainMenu();
     }
 
     public void mainMenu(){
@@ -116,11 +128,12 @@ public class GUI extends JFrame implements ActionListener {
 
         //JFrame
         this.setTitle("Main menu");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(frameWidth, frameHeight);
         this.setIconImage(icon.getImage());
         this.setLayout(null);
         this.setVisible(true);
+        this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(new Color(0xBBCCE2));
         this.add(mainMenuTitle);
         this.add(addFileGraph);
@@ -182,17 +195,16 @@ public class GUI extends JFrame implements ActionListener {
         this.add(insertFileTitle);
         this.setLayout(null);
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setSize(frameWidth, frameHeight);
         this.setVisible(true);
-        
     }
          
     public void newGraphMenu(){
         emptyGraphTitle = new JLabel();
         emptyGraphTitle.setBounds(0, 0, frameWidth, 50);
-        emptyGraphTitle.setText("Gerar grafo a partir de arquivo");
+        emptyGraphTitle.setText("Configurar grafo vazio");
         emptyGraphTitle.setHorizontalAlignment(JLabel.CENTER);
         emptyGraphTitle.setFont(new Font("Tahoma", Font.BOLD, 25));
         emptyGraphTitle.setBackground(new Color(0xBBCCE2));
@@ -226,7 +238,7 @@ public class GUI extends JFrame implements ActionListener {
         amountNodes = new JSpinner();
         amountNodes.setBounds(frameWidth/2 + frameWidth/8 - 50, 50, 50, 30);
         amountNodes.setModel(minMax1);
-        amountNodes.setValue(1);
+        amountNodes.setValue(0);
 
         amountEdge = new JSpinner();
         amountEdge.setBounds(frameWidth/2 + frameWidth/8 - 50, 95, 50, 30);
@@ -284,7 +296,6 @@ public class GUI extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(emptyGraphTitle);
         this.add(emptyGraphPanel);
@@ -297,7 +308,7 @@ public class GUI extends JFrame implements ActionListener {
         this.add(returnToMainMenu);
         this.add(StartGraph);
         this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     public void graphManagement(){
@@ -354,7 +365,7 @@ public class GUI extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(graphManagementTitle);
         this.add(editExistentNode);
@@ -362,10 +373,9 @@ public class GUI extends JFrame implements ActionListener {
         this.add(undoGraph);
         this.add(finishEdits);
         this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    public void editNode(){
+    public void editNode(boolean isWeight){
 
         editNodeTitle = new JLabel();
         editNodeTitle.setBounds(0, 0, frameWidth, 50);
@@ -389,16 +399,16 @@ public class GUI extends JFrame implements ActionListener {
         selectNode.setOpaque(true);
 
         weightEdges = new JLabel();
-        weightEdges.setText("<html>Defina o peso respectivo de<br>&emsp;&emsp;&emsp;cada conexão:</html>");
+        weightEdges.setText("<html>Defina o peso respectivo de cada conexão:</html>");
+
         weightEdges.setHorizontalAlignment(JLabel.CENTER);
         weightEdges.setVerticalAlignment(JLabel.CENTER);
-        weightEdges.setSize(frameWidth/2, 5);
+        weightEdges.setBounds(40, 165, 220, 50);
         weightEdges.setFont(new Font("Tahoma", Font.BOLD, 15));
         weightEdges.setBackground(new Color(0xBBCCE2));
         weightEdges.setOpaque(true);
 
         editNodePanel.add(selectNode);
-        editNodePanel.add(weightEdges);
 
         // 
         nodeComboBox = new JComboBox<Integer>();
@@ -415,24 +425,24 @@ public class GUI extends JFrame implements ActionListener {
         weightEdgesTextField.setFont(new Font("Comic Sans", Font.BOLD, 25));
 
         // Button return to graph management
-        undoEdits = new JButton("Desfazer edições");
-        undoEdits.setBounds(50, 250, 200, 40);
-        undoEdits.addActionListener(this);
-        undoEdits.setFocusable(false); // remove rectangle under text of button
-        undoEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
-        undoEdits.setForeground(Color.WHITE);
-        undoEdits.setBackground(new Color(59, 89, 182));
-        undoEdits.setBorder(BorderFactory.createEtchedBorder());
+        undoNodeEdits = new JButton("Desfazer edições");
+        undoNodeEdits.setBounds(50, 250, 200, 40);
+        undoNodeEdits.addActionListener(this);
+        undoNodeEdits.setFocusable(false); // remove rectangle under text of button
+        undoNodeEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        undoNodeEdits.setForeground(Color.WHITE);
+        undoNodeEdits.setBackground(new Color(59, 89, 182));
+        undoNodeEdits.setBorder(BorderFactory.createEtchedBorder());
         
         // Button save graph edits
-        saveEdits = new JButton("Salvar edições");
-        saveEdits.setBounds(370, 250, 170, 40);
-        saveEdits.addActionListener(this);
-        saveEdits.setFocusable(false); // remove rectangle under text of button
-        saveEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
-        saveEdits.setForeground(Color.WHITE);
-        saveEdits.setBackground(new Color(59, 89, 182));
-        saveEdits.setBorder(BorderFactory.createEtchedBorder());
+        saveNodeEdits = new JButton("Salvar edições");
+        saveNodeEdits.setBounds(370, 250, 170, 40);
+        saveNodeEdits.addActionListener(this);
+        saveNodeEdits.setFocusable(false); // remove rectangle under text of button
+        saveNodeEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        saveNodeEdits.setForeground(Color.WHITE);
+        saveNodeEdits.setBackground(new Color(59, 89, 182));
+        saveNodeEdits.setBorder(BorderFactory.createEtchedBorder());
        
 
         this.setTitle("Gestão do grafo");
@@ -440,17 +450,19 @@ public class GUI extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(editNodeTitle);
         this.add(editNodePanel);
-        this.add(undoEdits);
-        this.add(saveEdits);
+        this.add(undoNodeEdits);
+        this.add(saveNodeEdits);
         this.add(nodeComboBox);
         this.add(edgesTextField);
-        this.add(weightEdgesTextField);
+        if(isWeighted){
+            this.add(weightEdges);
+            this.add(weightEdgesTextField);
+        }
         this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     public void removeNode(){
@@ -479,24 +491,24 @@ public class GUI extends JFrame implements ActionListener {
         // nodeComboBox.setSelectedIndex(0);
         
         // Button return to graph management
-        undoEdits = new JButton("Desfazer edições");
-        undoEdits.setBounds(50, 250, 200, 40);
-        undoEdits.addActionListener(this);
-        undoEdits.setFocusable(false); // remove rectangle under text of button
-        undoEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
-        undoEdits.setForeground(Color.WHITE);
-        undoEdits.setBackground(new Color(59, 89, 182));
-        undoEdits.setBorder(BorderFactory.createEtchedBorder());
+        undoRemoveEdits = new JButton("Desfazer edições");
+        undoRemoveEdits.setBounds(50, 250, 200, 40);
+        undoRemoveEdits.addActionListener(this);
+        undoRemoveEdits.setFocusable(false); // remove rectangle under text of button
+        undoRemoveEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        undoRemoveEdits.setForeground(Color.WHITE);
+        undoRemoveEdits.setBackground(new Color(59, 89, 182));
+        undoRemoveEdits.setBorder(BorderFactory.createEtchedBorder());
         
         // Button save graph edits
-        saveEdits = new JButton("Salvar edições");
-        saveEdits.setBounds(370, 250, 170, 40);
-        saveEdits.addActionListener(this);
-        saveEdits.setFocusable(false); // remove rectangle under text of button
-        saveEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
-        saveEdits.setForeground(Color.WHITE);
-        saveEdits.setBackground(new Color(59, 89, 182));
-        saveEdits.setBorder(BorderFactory.createEtchedBorder());
+        saveRemoveEdits = new JButton("Salvar edições");
+        saveRemoveEdits.setBounds(370, 250, 170, 40);
+        saveRemoveEdits.addActionListener(this);
+        saveRemoveEdits.setFocusable(false); // remove rectangle under text of button
+        saveRemoveEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
+        saveRemoveEdits.setForeground(Color.WHITE);
+        saveRemoveEdits.setBackground(new Color(59, 89, 182));
+        saveRemoveEdits.setBorder(BorderFactory.createEtchedBorder());
        
 
         this.setTitle("Remover nodo");
@@ -504,15 +516,14 @@ public class GUI extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(removeNodeTitle);
         this.add(removeText);
         this.add(nodeComboBox);
-        this.add(undoEdits);
-        this.add(saveEdits);
+        this.add(undoRemoveEdits);
+        this.add(saveRemoveEdits);
         this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     public void chooseAlgorithm(){
@@ -574,7 +585,6 @@ public class GUI extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(algorithmChooserTitle);
         this.add(DFSButton);
@@ -583,7 +593,7 @@ public class GUI extends JFrame implements ActionListener {
         this.add(minimumSpanningTree);
         this.add(shortestPath);
         this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     public void finalPage(){
@@ -607,55 +617,66 @@ public class GUI extends JFrame implements ActionListener {
         animationButton.setBorder(BorderFactory.createEtchedBorder());
 
         // Button undo current graph
-        undoGraph = new JButton("Desfazer grafo");
-        undoGraph.setBounds(50, 250, 170, 40);
-        undoGraph.addActionListener(this);
-        undoGraph.setFocusable(false); // remove rectangle under text of button
-        undoGraph.setFont(new Font("Tahoma", Font.BOLD, 20));
-        undoGraph.setForeground(Color.WHITE);
-        undoGraph.setBackground(new Color(59, 89, 182));
-        undoGraph.setBorder(BorderFactory.createEtchedBorder());
+        finalUndoGraph = new JButton("Desfazer grafo");
+        finalUndoGraph.setBounds(50, 250, 170, 40);
+        finalUndoGraph.addActionListener(this);
+        finalUndoGraph.setFocusable(false); // remove rectangle under text of button
+        finalUndoGraph.setFont(new Font("Tahoma", Font.BOLD, 20));
+        finalUndoGraph.setForeground(Color.WHITE);
+        finalUndoGraph.setBackground(new Color(59, 89, 182));
+        finalUndoGraph.setBorder(BorderFactory.createEtchedBorder());
 
         // Button start graph
-        finishEdits = new JButton("Finalizar grafo");
-        finishEdits.setBounds(370, 250, 170, 40);
-        finishEdits.addActionListener(this);
-        finishEdits.setFocusable(false); // remove rectangle under text of button
-        finishEdits.setFont(new Font("Tahoma", Font.BOLD, 20));
-        finishEdits.setForeground(Color.WHITE);
-        finishEdits.setBackground(new Color(59, 89, 182));
-        finishEdits.setBorder(BorderFactory.createEtchedBorder());
+        finalSaveGraph = new JButton("Finalizar grafo");
+        finalSaveGraph.setBounds(370, 250, 170, 40);
+        finalSaveGraph.addActionListener(this);
+        finalSaveGraph.setFocusable(false); // remove rectangle under text of button
+        finalSaveGraph.setFont(new Font("Tahoma", Font.BOLD, 20));
+        finalSaveGraph.setForeground(Color.WHITE);
+        finalSaveGraph.setBackground(new Color(59, 89, 182));
+        finalSaveGraph.setBorder(BorderFactory.createEtchedBorder());
 
         this.setTitle("Select algorithm");
         this.setSize(frameWidth, frameHeight);
         this.setLayout(null);
         this.setIconImage(icon.getImage());
         this.getContentPane().setBackground(new Color(0xBBCCE2));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.add(algorithmChooserTitle);
         this.add(animationButton);
-        this.add(undoGraph);
-        this.add(finishEdits);
+        this.add(finalUndoGraph);
+        this.add(finalSaveGraph);
         this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
-
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Main menu actions
-        if(e.getSource() == addFileGraph){
-            System.out.println("addFileGraph");
+
+        // Main menu actions ////////////////////
+        if(e.getSource() == addFileGraph){ // Start by file button
+            System.out.println("Add file graph");
+            this.remove(mainMenuTitle);
+            this.remove(addFileGraph);
+            this.remove(initNewGraph);
+            this.dispose();
+            isFile = true;
+            fileGraphMenu();
         }
 
-
-        if(e.getSource() == initNewGraph){
-            System.out.println("initNewGraph");
+        if(e.getSource() == initNewGraph){ // Start new graph button
+            System.out.println("Start new graph");
+            this.remove(mainMenuTitle);
+            this.remove(addFileGraph);
+            this.remove(initNewGraph);
+            this.dispose();
+            isFile = false;
+            newGraphMenu();
         }
-        
-        // Insert file actions
-        if(e.getSource() == addFileButton){
+        //////////////////////////////////////////
+
+        // Insert file actions ///////////////////
+        if(e.getSource() == addFileButton){ // Browse button
             JFileChooser file = new JFileChooser();
             file.setCurrentDirectory(new File(System.getProperty("user.home"))); // Set initial user files
             
@@ -666,32 +687,18 @@ public class GUI extends JFrame implements ActionListener {
 
             //if the user click on save in Jfilechooser
             if(result == JFileChooser.APPROVE_OPTION){
-                File selectedFile = file.getSelectedFile();
-                fileNameLabel.setText("Arquivo: " + selectedFile.getName() + " selecionado");
+                this.selectedFile = file.getSelectedFile();
+                fileNameLabel.setText("Arquivo: " + this.selectedFile.getName() + " selecionado");
             }
             //if the user click on save in Jfilechooser
             else if(result == JFileChooser.CANCEL_OPTION){
                 System.out.println("No File Select");
             }
         }
+        /////////////////////////////////////////////////
 
-
-        if (e.getSource() == weighedYes || e.getSource() == weighedNo) {
-			JCheckBox clicked = (JCheckBox) e.getSource();
-			if (clicked == weighedYes) {
-				if (clicked.isSelected())
-					weighedNo.setSelected(false);
-				else
-                    weighedNo.setSelected(true);
-			} else {
-				if (clicked.isSelected())
-					weighedYes.setSelected(false);
-				else
-					weighedYes.setSelected(true);
-			}
-		}
-        
-
+        // Start from empty graph ///////////////////////
+        // check box directed graph
         if (e.getSource() == edgeYes || e.getSource() == edgeNo) {
             JCheckBox clicked = (JCheckBox) e.getSource();
             if (clicked == edgeYes) {
@@ -707,14 +714,334 @@ public class GUI extends JFrame implements ActionListener {
             }
         }
 
+        // check box weighed graph
+        if (e.getSource() == weighedYes || e.getSource() == weighedNo) {
+            JCheckBox clicked = (JCheckBox) e.getSource();
+            if (clicked == weighedYes) {
+                if (clicked.isSelected())
+                    weighedNo.setSelected(false);
+                else
+                    weighedNo.setSelected(true);
+            } else {
+                if (clicked.isSelected())
+                    weighedYes.setSelected(false);
+                else
+                    weighedYes.setSelected(true);
+            }
+        }
 
+        // Return to menu button - shared with Start from file frame
         if(e.getSource() == returnToMainMenu){
-            System.out.println("Return to main menu");
+            System.out.println("Return to main menu Button");
+            if(isFile){ // Insert file
+                this.remove(addFileButton);
+                this.remove(fileNameLabel);
+                this.remove(insertFileTitle);
+            }
+            else{ // Start new graph
+                this.remove(emptyGraphTitle);
+                this.remove(emptyGraphPanel);
+                this.remove(amountNodes);
+                this.remove(amountEdge);
+                this.remove(weighedYes);
+                this.remove(weighedNo);
+                this.remove(edgeYes);
+                this.remove(edgeNo);
+            }
+            this.remove(returnToMainMenu);
+            this.remove(StartGraph);
+            this.dispose();
+            mainMenu();
         }
 
-
+        // Start graph button - shared with Start from file frame
         if(e.getSource() == StartGraph){
-            System.out.println("Start graph");
+
+            System.out.println("Start graph Button");
+            if(isFile){ // Insert file
+                if(this.selectedFile != null){
+                    this.remove(addFileButton);
+                    this.remove(fileNameLabel);
+                    this.remove(insertFileTitle);
+                    this.remove(returnToMainMenu);
+                    this.remove(StartGraph);
+                    this.dispose();
+
+                    graphManagement();
+                //     ArrayList<String> splitSelectFile = new ArrayList<String>(Arrays.asList(this.selectedFile.getName().split("."))); 
+                //     System.out.println(splitSelectFile.get(1));
+                //     if (splitSelectFile.get(1) == "gr")                        
+                //         graphManagement();
+                //     else
+                //         System.out.println("selected file does not match gr type");
+                } else
+                    System.out.println("No file selected");                
+            } 
+            else{
+                if((int)amountNodes.getValue() > 0){
+                    int numNodes = (int)amountNodes.getValue();
+                    int numEdge = (int)amountEdge.getValue();
+                    this.isWeighted = weighedYes.isSelected();
+                    this.isDirected = edgeYes.isSelected();
+        
+                    // Call graph class
+                    // Graph.metodo(numNodes, numEdge, weighedGraph, this.isDirected);
+
+                    // close the current frame to open the next
+                        this.remove(emptyGraphTitle);
+                        this.remove(emptyGraphPanel);
+                        this.remove(amountNodes);
+                        this.remove(amountEdge);
+                        this.remove(weighedYes);
+                        this.remove(weighedNo);
+                        this.remove(edgeYes);
+                        this.remove(edgeNo);
+                        this.remove(returnToMainMenu);
+                        this.remove(StartGraph);
+                        this.dispose();
+                        
+                        graphManagement();
+                } else if((int)amountNodes.getValue() == 0)
+                    System.out.println("zero cannot be the number of vertices");
+            }
         }
+        //////////////////////////////////////////
+        
+        // Graph maganement //////////////////////
+        // Edit existent node button
+        if(e.getSource() == editExistentNode){
+            System.out.println("Edit existent node");
+            this.remove(graphManagementTitle);
+            this.remove(editExistentNode);
+            this.remove(removeExistentNode);
+            this.remove(undoGraph);
+            this.remove(finishEdits);
+            this.dispose();
+            editNode(this.isWeighted);
+        }
+
+        // Remove existent node button
+        if(e.getSource() == removeExistentNode){
+            System.out.println("Remove Existent Node");
+            this.remove(graphManagementTitle);
+            this.remove(editExistentNode);
+            this.remove(removeExistentNode);
+            this.remove(undoGraph);
+            this.remove(finishEdits);
+            this.dispose();
+            removeNode();
+        }
+
+        // Undo graph button
+        if(e.getSource() == undoGraph){
+            System.out.println("Undo graph");
+
+            // add frame to confirm choice
+             
+            this.remove(graphManagementTitle);
+            this.remove(editExistentNode);
+            this.remove(removeExistentNode);
+            this.remove(undoGraph);
+            this.remove(finishEdits);
+            this.dispose();
+        }
+
+        if(e.getSource() == finishEdits){
+            System.out.println("Finish edits in graph");
+            this.remove(graphManagementTitle);
+            this.remove(editExistentNode);
+            this.remove(removeExistentNode);
+            this.remove(undoGraph);
+            this.remove(finishEdits);
+            this.dispose();
+
+            chooseAlgorithm();
+        }
+        //////////////////////////////////////////
+
+
+        // Edit existent node frame //////////////
+        // Undo node edits button
+        if(e.getSource() == undoNodeEdits){
+            System.out.println("Undo node edits");
+            this.remove(editNodeTitle);
+            this.remove(editNodePanel);
+            this.remove(undoNodeEdits);
+            this.remove(saveNodeEdits);
+            this.remove(nodeComboBox);
+            this.remove(edgesTextField);
+            if(this.isWeighted){
+                this.remove(weightEdges);
+                this.remove(weightEdgesTextField);
+            }
+            this.dispose();
+            graphManagement();
+        }
+        
+        // Save existent node edits button
+        if(e.getSource() == saveNodeEdits){
+            System.out.println("Save edits");
+            // int nodeSelectedToEdit = (Integer)nodeComboBox.getSelectedItem();
+            String edgeTo = edgesTextField.getText();
+            String  edgeWeight = null;
+            if(this.isWeighted)
+                edgeWeight = weightEdgesTextField.getText();
+            // Graph.editMethod(nodeSelectedToEdit, edgeTo, edgeWeight, this.isDirected);
+
+            this.remove(editNodeTitle);
+            this.remove(editNodePanel);
+            this.remove(undoNodeEdits);
+            this.remove(saveNodeEdits);
+            this.remove(nodeComboBox);
+            this.remove(edgesTextField);
+            if(this.isWeighted){
+                this.remove(weightEdges);
+                this.remove(weightEdgesTextField);
+            }
+            this.dispose();
+            graphManagement();
+        }
+        //////////////////////////////////////////
+
+        // Remove existent node frame ////////////
+
+        // Undo remove edits button
+        if(e.getSource() == undoRemoveEdits){
+            System.out.println("Undo node remove edits");
+
+
+            this.remove(removeNodeTitle);
+            this.remove(removeText);
+            this.remove(nodeComboBox);
+            this.remove(undoRemoveEdits);
+            this.remove(saveRemoveEdits);
+            this.dispose();
+            graphManagement();
+
+
+        }
+
+        // Save remove edits button
+        if(e.getSource() == saveRemoveEdits){
+            System.out.println("Save remove edits");
+            // int nodeSelectedToEdit = (Integer)nodeComboBox.getSelectedItem();
+
+            // Graph.removeMethod(nodeSelectedToEdit, this.isWeighed, this.isDirected);
+
+            this.remove(removeNodeTitle);
+            this.remove(removeText);
+            this.remove(nodeComboBox);
+            this.remove(undoRemoveEdits);
+            this.remove(saveRemoveEdits);
+            this.dispose();
+            graphManagement();
+        }
+        //////////////////////////////////////////
+
+
+        // Choose algorithm frame ////////////////
+        // DFS Button
+        if(e.getSource() == DFSButton){
+            System.out.println("DFS selected");
+
+            // call DFS method
+            this.remove(algorithmChooserTitle);
+            this.remove(DFSButton);
+            this.remove(BFSButton);
+            this.remove(TopologicalSortingButton);
+            this.remove(minimumSpanningTree);
+            this.remove(shortestPath);
+            this.dispose();
+            
+            finalPage();
+        }
+
+        // BFS Button
+        if(e.getSource() == BFSButton){
+            System.out.println("BFS selected");
+
+            // call BFS method
+
+            this.remove(algorithmChooserTitle);
+            this.remove(DFSButton);
+            this.remove(BFSButton);
+            this.remove(TopologicalSortingButton);
+            this.remove(minimumSpanningTree);
+            this.remove(shortestPath);
+            this.dispose();
+            
+            finalPage();
+        }
+
+        // Topological sorting Button
+        if(e.getSource() == TopologicalSortingButton){
+            System.out.println("Topological sorting selected");
+
+            // call TopologicalSorting method
+
+            this.remove(algorithmChooserTitle);
+            this.remove(DFSButton);
+            this.remove(BFSButton);
+            this.remove(TopologicalSortingButton);
+            this.remove(minimumSpanningTree);
+            this.remove(shortestPath);
+            this.dispose();
+            
+            finalPage();
+        }
+
+        // Minimum spanning tree sorting Button
+        if(e.getSource() == minimumSpanningTree){
+            System.out.println("minimum spanning tree selected");
+
+            // call minimumSpanningTree method
+
+            this.remove(algorithmChooserTitle);
+            this.remove(DFSButton);
+            this.remove(BFSButton);
+            this.remove(TopologicalSortingButton);
+            this.remove(minimumSpanningTree);
+            this.remove(shortestPath);
+            this.dispose();
+            
+            finalPage();
+        }
+
+        // Shortest path tree sorting Button
+        if(e.getSource() == shortestPath){
+            System.out.println("Shortest path selected");
+
+            // call shortestPath method
+
+            this.remove(algorithmChooserTitle);
+            this.remove(DFSButton);
+            this.remove(BFSButton);
+            this.remove(TopologicalSortingButton);
+            this.remove(minimumSpanningTree);
+            this.remove(shortestPath);
+            this.dispose();
+            
+            finalPage();
+        }
+        //////////////////////////////////////////
+
+        // final page frame //////////////////////
+        if(e.getSource() == animationButton){
+            System.out.println("Animation");
+            // call animation method and do not close final page frame
+        }
+
+        if(e.getSource() == finalUndoGraph){
+            // just finish program
+            System.out.println("Undo whole graph");
+            this.dispose();
+        }
+
+        if(e.getSource() == finalSaveGraph){
+            // call save method
+            System.out.println("Finish and save graph");
+            this.dispose();
+        }
+        //////////////////////////////////////////
     }
 }

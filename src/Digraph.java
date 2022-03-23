@@ -8,22 +8,23 @@ public class Digraph{
     // void StronglyConnectedComponents(); // Componentes fortemente conectados de um grafo orientado
     // Digraph DijkstrasAlgorithm(int s); // Caminho mais curto a partir de uma unica fonte (s) - Algoritmo de Dijkstra - Este método pode ser implementado como um método de classe (static)
     // Digraph FloydsAlgorithm(); // Caminho mais curto entre todos os pares de vértices - Algoritmo de Floyd - Este método pode ser implementado como um método de classe (static)
-    private ArrayList<Edge> arestas = new ArrayList<Edge>();
-    private ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+    private ArrayList<Edge> arestas = new ArrayList<Edge>();//cria as arestas
+    private ArrayList<Vertex> vertices = new ArrayList<Vertex>();//cria os vertices 
     private boolean hasCycle = false;
 
     public void clearLists(){//limpa TUDO 
-      this.arestas.clear();
+      this.arestas.clear();//limpa tudo
       this.vertices.clear();
       this.setHasCycle(false);
     }
-    public boolean isHasCycle() {
+    public boolean isHasCycle() {//get
       return hasCycle;
     }
-    public void setHasCycle(boolean hasCycle) {
+    public void setHasCycle(boolean hasCycle) {//ciclo do grafo 
       this.hasCycle = hasCycle;
     }
-    public void addAresta(int peso, String origem, String destino){
+    public void addAresta(int peso, String origem, String destino){//Graph.metodoEditNode(Int nodeSelectedToEdit, String edgeTo, String edgeWeight, boolean isWeighted); 
+
       int i,j,k;
       
       //adiciona vertices e retorna posicao
@@ -46,16 +47,16 @@ public class Digraph{
     public void setArestas(ArrayList<Edge> arestas) {
       this.clearLists();
       
-      for (int i=0; i<arestas.size() ; i++)
+      for (int i=0; i<arestas.size() ; i++)//size total de arestas  
         this.addAresta(arestas.get(i).getPeso(), 
                 arestas.get(i).getOrigem().getNome(), 
                 arestas.get(i).getDestino().getNome() );
     }
   
-    public void setVertices(ArrayList<Vertex> vertices) {
-      this.clearLists();
+    public void setVertices(ArrayList<Vertex> vertices) {//setando os vertices 
+      this.clearLists();//limpa  a lista primeiro 
       
-      for (int i=0; i<vertices.size() ; i++){
+      for (int i=0; i<vertices.size() ; i++){//ate o ototal de vertices 
   
         //se ja existir na lista nao passara daqui
         if(this.posicaoVertice(vertices.get(i).getNome())==this.vertices.size()){
@@ -96,7 +97,7 @@ public class Digraph{
       return i;
     }
     
-    public void limparVerticesPai(){
+    public void limparVerticesPai(){//passa o peso aqui
       for(int i=0; i<this.getVertices().size() ;i++)
         this.getVertices().get(i).setPai(null);
     }
@@ -106,12 +107,12 @@ public class Digraph{
         this.getVertices().get(i).setVisitado(false);
     }
     
-    public void limparArestaVisitada(){
+    public void limparArestaVisitada(){//visitor hear
       for(int i=0; i<this.getArestas().size() ;i++)
         this.getArestas().get(i).setVisitado(false);
     }
     
-    public void imprimeArvore(){
+    public void imprimeArvore(){//to string
       for (int i=0; i<arestas.size();i++)
         System.out.print(this.arestas.get(i).getOrigem().getNome() + this.arestas.get(i).getDestino().getNome() + " - " + this.arestas.get(i).getPeso() + " | ");
       System.out.println();
@@ -137,7 +138,7 @@ public class Digraph{
       return this.vertices.get(this.posicaoVertice(nome));
     }
     
-    public Edge acharAresta(Vertex vet1, Vertex vet2){
+    public Edge acharAresta(Vertex vet1, Vertex vet2){//mandar o peso junto 
       for(int i=0; i<this.arestas.size();i++){
         if( ((this.arestas.get(i).getOrigem().getNome().equals(vet1.getNome())) &&
           (this.arestas.get(i).getDestino().getNome().equals(vet2.getNome()))) ||

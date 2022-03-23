@@ -26,17 +26,8 @@ public class Vertex{
 	private int distancia = 0;
 	private Vertex pai;
 	private ArrayList<Edge> incidentes = new ArrayList<Edge>();
-	private ArrayList<Vertex> vizinhos = new ArrayList<Vertex>();
+	private ArrayList<Vertex> vizinhos = new ArrayList<Vertex>();//listas
 	private boolean visitado = false;
-	private String cor = "branco"; 
-	
-	public String getCor() {
-		return cor;
-	}
-
-	public void setCor(String cor) {
-		this.cor = cor;
-	}
 
 	public Vertex(String nome){
 		this.setNome(nome);
@@ -50,7 +41,7 @@ public class Vertex{
 		this.nome = nome;
 	}
 	
-	public int getDistancia() {
+	public int getDistancia() {//mandar para a GUI
 		return distancia;
 	}
 	

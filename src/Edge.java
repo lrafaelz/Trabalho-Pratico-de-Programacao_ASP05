@@ -30,7 +30,7 @@ public class Edge {
 		this.setDestino(destino);
 	}
 	
-	public boolean isVisitado() {
+	public boolean isVisitado() {//visitor get
 		return visitado;
 	}
 

@@ -1,5 +1,4 @@
 import java.io.File;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -50,6 +49,7 @@ public class GUI extends JFrame implements ActionListener {
     JLabel selectEdge;
     JLabel weightEdges;
     JComboBox<Integer> nodeComboBox; // shared with remove node frame
+    String[] nodeList = {};
     JTextField edgesTextField;
     JTextField weightEdgesTextField;
     JButton undoNodeEdits;
@@ -84,6 +84,10 @@ public class GUI extends JFrame implements ActionListener {
     File selectedFile = null;
     boolean isWeighted;
     boolean isDirected;
+
+
+    // iniciate graph
+    Graph graph;
 
     GUI(){
         mainMenu();
@@ -413,7 +417,6 @@ public class GUI extends JFrame implements ActionListener {
         nodeComboBox = new JComboBox<Integer>();
         // nodeComboBox.setSelectedIndex(0);
         nodeComboBox.setBounds(frameWidth/2 + frameWidth/8 - 50, 55, 100, 30);
-        // nodeComboBox.setSelectedIndex(0);
 
         edgesTextField = new JTextField();
         edgesTextField.setBounds(frameWidth/2 + frameWidth/8 - 50, 95, 200, 30);
@@ -733,6 +736,7 @@ public class GUI extends JFrame implements ActionListener {
         if(e.getSource() == returnToMainMenu){
             System.out.println("Return to main menu Button");
             if(isFile){ // Insert file
+                
                 this.remove(addFileButton);
                 this.remove(fileNameLabel);
                 this.remove(insertFileTitle);
@@ -759,6 +763,7 @@ public class GUI extends JFrame implements ActionListener {
             System.out.println("Start graph Button");
             if(isFile){ // Insert file
                 if(this.selectedFile != null){
+                    graph = new Graph(0, true, true, selectedFile);
                     this.remove(addFileButton);
                     this.remove(fileNameLabel);
                     this.remove(insertFileTitle);
@@ -784,7 +789,10 @@ public class GUI extends JFrame implements ActionListener {
                     this.isDirected = edgeYes.isSelected();
         
                     // Call graph class
-                    // Graph.metodo(numNodes, numEdge, weighedGraph, this.isDirected);
+                    graph = new Graph(numNodes, this.isDirected, false, null);
+                    graph.fillGraph(numNodes);
+                    graph.randomEdge(numEdge, numNodes);
+                    graph.print();
 
                     // close the current frame to open the next
                         this.remove(emptyGraphTitle);

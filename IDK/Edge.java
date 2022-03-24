@@ -18,16 +18,17 @@
 
 
 public class Edge {
-    private int peso;
-	private Vertex origem;
-	private Vertex destino;
+    private double peso;
+	private Vertex origem;//inicio
+	private Vertex destino;//fim
+	
 	private boolean visitado = false;
 	
 	
-	public Edge(int peso, Vertex origem, Vertex destino) {
-		this.setPeso(peso);
-		this.setOrigem(origem);
-		this.setDestino(destino);
+	public Edge(double peso, Vertex origem, Vertex destino) {
+		this.peso = peso;
+		this.origem = origem;
+		this.destino = destino;
 	}
 	
 	public boolean isVisitado() {//visitor get
@@ -38,20 +39,16 @@ public class Edge {
 		this.visitado = visitado;
 	}
 
-	public int getPeso() {
+	public double getPeso() {
 		return peso;
 	}
 
-	public void setPeso(int peso) {
-		this.peso = peso;
-	}
 
 	public Vertex getOrigem() {
 		return origem;
 	}
 
 	public void setOrigem(Vertex origem) {
-		
 		this.origem = origem;
 	}
 
@@ -63,11 +60,51 @@ public class Edge {
 		
 		this.destino = destino;
 	}
+	// public void AdcionarAresta()
 	
 	@Override
 	public String toString() {
-		String s = " ";
-		s+= this.getOrigem().getNome() + this.getDestino().getNome();
-		return s;
+		String text = "";
+		text += this.origem.getNode() + " -> " + this.destino.getNode() + " | ";
+		return text;
 	}
 }
+//////////////////////////////////////////////////////////////////////////
+/*
+public class Aresta<TIPO> {
+    private Double peso;
+    private Vertice<TIPO> inicio;
+    private Vertice<TIPO> fim;
+    
+    public Aresta(Double peso, Vertice<TIPO> inicio, Vertice<TIPO> fim){
+        this.peso = peso;
+        this.inicio = inicio;
+        this.fim = fim;
+    }
+
+    public Double getPeso() {
+        return peso;
+    }
+
+    public void setPeso(Double peso) {
+        this.peso = peso;
+    }
+
+    public Vertice<TIPO> getInicio() {
+        return inicio;
+    }
+
+    public void setInicio(Vertice<TIPO> inicio) {
+        this.inicio = inicio;
+    }
+
+    public Vertice<TIPO> getFim() {
+        return fim;
+    }
+
+    public void setFim(Vertice<TIPO> fim) {
+        this.fim = fim;
+    }
+    
+    
+}*/

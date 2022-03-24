@@ -1,7 +1,6 @@
   class Main {
 
     Main(){
-      final int maxNodes = 9;
       
       // graph.fillGraph(maxNodes);
 

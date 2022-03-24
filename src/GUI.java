@@ -1,4 +1,6 @@
 import java.io.File;
+import java.util.Scanner;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -609,7 +611,7 @@ public class GUI extends JFrame implements ActionListener {
 
         
 
-        animationButton = new JButton("Animação");
+        animationButton = new JButton("Representação");
         animationButton.setBounds(frameWidth/2 - 180/2, 70, 180, 40);
         animationButton.addActionListener(this);
         animationButton.setFocusable(false); // remove rectangle under text of button
@@ -763,7 +765,7 @@ public class GUI extends JFrame implements ActionListener {
             System.out.println("Start graph Button");
             if(isFile){ // Insert file
                 if(this.selectedFile != null){
-                    graph = new Graph(0, true, true, selectedFile);
+                    graph = new Graph(0, true, true, true, selectedFile);
                     this.remove(addFileButton);
                     this.remove(fileNameLabel);
                     this.remove(insertFileTitle);
@@ -771,7 +773,7 @@ public class GUI extends JFrame implements ActionListener {
                     this.remove(StartGraph);
                     this.dispose();
 
-                    graphManagement();
+                    chooseAlgorithm();
                 //     ArrayList<String> splitSelectFile = new ArrayList<String>(Arrays.asList(this.selectedFile.getName().split("."))); 
                 //     System.out.println(splitSelectFile.get(1));
                 //     if (splitSelectFile.get(1) == "gr")                        
@@ -785,14 +787,17 @@ public class GUI extends JFrame implements ActionListener {
                 if((int)amountNodes.getValue() > 0){
                     int numNodes = (int)amountNodes.getValue();
                     int numEdge = (int)amountEdge.getValue();
-                    this.isWeighted = weighedYes.isSelected();
-                    this.isDirected = edgeYes.isSelected();
+                    this.isWeighted = !weighedYes.isSelected();
+                    this.isDirected = !edgeYes.isSelected();
+                    System.out.println("Is directed: "+ isDirected);
+                    System.out.println("Is weighed: "+ isDirected);
         
                     // Call graph class
-                    graph = new Graph(numNodes, this.isDirected, false, null);
+                    graph = new Graph(numNodes, this.isDirected, this.isWeighted, false, null);
                     graph.fillGraph(numNodes);
                     graph.randomEdge(numEdge, numNodes);
                     graph.print();
+                    // System.out.println(s);
 
                     // close the current frame to open the next
                         this.remove(emptyGraphTitle);
@@ -807,14 +812,14 @@ public class GUI extends JFrame implements ActionListener {
                         this.remove(StartGraph);
                         this.dispose();
                         
-                        graphManagement();
-                } else if((int)amountNodes.getValue() == 0)
+                        chooseAlgorithm();
+                    } else if((int)amountNodes.getValue() == 0)
                     System.out.println("zero cannot be the number of vertices");
             }
         }
         //////////////////////////////////////////
         
-        // Graph maganement //////////////////////
+        // Graph maganement ////////////////////// Removed ;-;
         // Edit existent node button
         if(e.getSource() == editExistentNode){
             System.out.println("Edit existent node");
@@ -867,7 +872,7 @@ public class GUI extends JFrame implements ActionListener {
         //////////////////////////////////////////
 
 
-        // Edit existent node frame //////////////
+        // Edit existent node frame ////////////// Removed
         // Undo node edits button
         if(e.getSource() == undoNodeEdits){
             System.out.println("Undo node edits");
@@ -910,7 +915,7 @@ public class GUI extends JFrame implements ActionListener {
         }
         //////////////////////////////////////////
 
-        // Remove existent node frame ////////////
+        // Remove existent node frame ////////////  Removed
 
         // Undo remove edits button
         if(e.getSource() == undoRemoveEdits){
@@ -950,6 +955,12 @@ public class GUI extends JFrame implements ActionListener {
         // DFS Button
         if(e.getSource() == DFSButton){
             System.out.println("DFS selected");
+            System.out.println("Digite o valor a ser buscado: ");
+            Scanner IO = new Scanner(System.in);
+            int value = IO.nextInt();
+
+
+            graph.depthFirstSearch(value);
 
             // call DFS method
             this.remove(algorithmChooserTitle);
@@ -966,6 +977,12 @@ public class GUI extends JFrame implements ActionListener {
         // BFS Button
         if(e.getSource() == BFSButton){
             System.out.println("BFS selected");
+            System.out.println("Digite o valor a ser buscado: ");
+            Scanner IO = new Scanner(System.in);
+            int value = IO.nextInt();
+
+
+            graph.breadthFirstSearch(value);
 
             // call BFS method
 
@@ -1034,7 +1051,7 @@ public class GUI extends JFrame implements ActionListener {
 
         // final page frame //////////////////////
         if(e.getSource() == animationButton){
-            System.out.println("Animation");
+            System.out.println("Representation");
             // call animation method and do not close final page frame
         }
 

@@ -1,24 +1,27 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Graph {
 
 	ArrayList<Node> nodes;
 	double[][] matrix;
     boolean isDirected;
-	
-	Graph(int size, boolean isDirected, boolean isFile, File grFile){
+    boolean isWeighted;
+
+	Graph(int size, boolean isDirected, boolean isWeighted, boolean isFile, File grFile){
         if(!isFile){
             nodes = new ArrayList<>();
             matrix = new double[size][size];
             this.isDirected = isDirected;
+            this.isWeighted = isWeighted;
         } else{
             readFile(grFile);
+            this.isDirected = isDirected;
+            this.isWeighted = isWeighted; 
         }
-
 	}
 	
 	public void addNode(Node node) {
@@ -26,15 +29,27 @@ public class Graph {
 	}
 	
 	public void addEdge(double wgt, int src, int dst) {
-        if(isDirected)
-            matrix[src][dst] = wgt;
+        
+        if(isWeighted){
+            if(isDirected)
+                matrix[src][dst] = wgt;
+            else{
+                matrix[src][dst] = wgt;
+                matrix[dst][src] = wgt;
+            } 
+        }
         else{
-            matrix[src][dst] = wgt;
-            matrix[dst][src] = wgt;
+            if(isDirected)
+                matrix[src][dst] = 1;
+            else{
+                matrix[src][dst] = 1;
+                matrix[dst][src] = 1;
+            }
         }
 	}
 
     public void removeEdge(int src, int dst){
+        
         if(isDirected)
             matrix[src][dst] = 0;
         else{
@@ -95,7 +110,6 @@ public class Graph {
 	private void dFSHelper(int src, boolean[] visited) {
 		
 		if(visited[src]) {
-            System.out.println(nodes.get(src).data + " = not_visited");
 			return;
 		}
 		else {
@@ -111,35 +125,75 @@ public class Graph {
 		return;
 	}
 
-    public void readFile(File grFile){
 
-        File myObj;
+    public void breadthFirstSearch(int src) {
 		
-        try {
-
-            myObj = grFile;
-            Scanner myReader = new Scanner(myObj);
-
-            while (myReader.hasNextLine()) {
-
-                String data = myReader.nextLine();
-                System.out.println("File: " + myObj.getName());
-
-            }
-
-        } catch (FileNotFoundException e) {
-
-            System.out.println("Error! File could not be opened.");
-            e.printStackTrace();
+		Queue<Integer> queue = new LinkedList<>();
+		boolean[] visited = new boolean[matrix.length];
 		
+		queue.offer(src);
+		visited[src] = true;
+		
+		while(queue.size() != 0) {
+			
+			src = queue.poll();
+			System.out.println(nodes.get(src).data + " = visited");
+			
+			for(int i = 0; i < matrix[src].length; i++) {
+				if(matrix[src][i] != 0 && !visited[i]) {
+					queue.offer(i);
+					visited[i] = true;
+				}
+			}
 		}
-
-		nodes = new ArrayList<Node>();
-        //matrix = new double[size][size];
-        this.isDirected = true;
     }
 
-	public void print() {
+
+    public void readFile(File recive){
+
+        
+        String file = recive.getAbsolutePath();
+        BufferedReader reader = null;
+        String line = "";
+        System.out.println("File path: " + file);
+  
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            while((line = reader.readLine()) != null) {
+        
+                String[] row = line.split(",");
+            
+          //String[] row = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+            for(String index : row) {
+                System.out.printf("%-10s", index);
+            }
+
+            
+            System.out.println();
+
+            }
+        }
+
+        catch(Exception e) {
+
+            e.printStackTrace();
+        }
+
+        finally {
+
+            try {
+
+                reader.close();
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public void print() {
 		System.out.print("  ");
 		for(Node node : nodes) {
 			System.out.print(" " + node.data + "  ");
@@ -154,5 +208,14 @@ public class Graph {
 			System.out.println();
 		}
 	}
+    
+    
+    
+    
+    
+    
+    public void shortestPath( double matriz [][]){
+        
+    }
 
 }
